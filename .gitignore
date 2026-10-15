@@ -4,4 +4,5 @@ node_modules/
 *.log
 npm-debug.log*
 coverage/
-.vscode/
+.vscode/*
+!.vscode/extensions.json
