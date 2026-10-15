@@ -1,0 +1,73 @@
+### Mini LMS REST API Testing File (VS Code REST Client compatible)
+### Base URL
+@baseUrl = http://localhost:5000/api
+@token = {{loginStudent.response.body.token}}
+@instructorToken = {{loginInstructor.response.body.token}}
+
+### 1. Health Check
+GET {{baseUrl}}/health HTTP/1.1
+
+### 2. Register New Student
+POST {{baseUrl}}/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "fullName": "Alice Johnson",
+  "email": "alice.student@example.com",
+  "password": "Password123!",
+  "role": "student"
+}
+
+### 3. Register New Instructor
+POST {{baseUrl}}/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "fullName": "Dr. Alan Turing",
+  "email": "alan.instructor@example.com",
+  "password": "Password123!",
+  "role": "instructor"
+}
+
+### 4. Login Student (Extracts Bearer Token)
+# @name loginStudent
+POST {{baseUrl}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "alice.student@example.com",
+  "password": "Password123!"
+}
+
+### 5. Login Instructor (Extracts Instructor Bearer Token)
+# @name loginInstructor
+POST {{baseUrl}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "alan.instructor@example.com",
+  "password": "Password123!"
+}
+
+### 6. Get Current User Profile (Protected - Bearer Token)
+GET {{baseUrl}}/auth/me HTTP/1.1
+Authorization: Bearer {{token}}
+
+### 7. Get All Published Courses (Public)
+GET {{baseUrl}}/courses HTTP/1.1
+
+### 8. Search Courses by Keyword & Category
+GET {{baseUrl}}/courses?search=Web&category=Programming HTTP/1.1
+
+### 9. Create Course (Instructor Only)
+POST {{baseUrl}}/courses HTTP/1.1
+Authorization: Bearer {{instructorToken}}
+Content-Type: application/json
+
+{
+  "title": "Full-Stack Web Development with Node.js & PostgreSQL",
+  "description": "Master modern full-stack development covering Express, PostgreSQL, REST APIs, and responsive design.",
+  "category": "Web Development",
+  "difficulty": "intermediate",
+  "thumbnailUrl": "https://images.unsplash.com/photo-1593720213428-28a5b9e94613?auto=format&fit=crop&w=600&q=80"
+}
